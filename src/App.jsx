@@ -6,11 +6,9 @@ const clientId = import.meta.env.VITE_CLIENT_ID;
 const clientSecret = import.meta.env.VITE_CLIENT_SECRET;
 
 function App() {
-
   const [searchInput, setSearchInput] = useState("");
   const [accessToken, setAccessToken] = useState("");
   const [playlists, setPlaylists] = useState([]);
-
 
   useEffect(() => {
     let authParams = {
@@ -24,7 +22,6 @@ function App() {
         "&client_secret=" +
         clientSecret,
     };
-  
     fetch("https://accounts.spotify.com/api/token", authParams)
       .then((result) => result.json())
       .then((data) => {
