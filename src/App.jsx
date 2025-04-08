@@ -9,6 +9,7 @@ function App() {
   const [searchInput, setSearchInput] = useState("");
   const [accessToken, setAccessToken] = useState("");
   const [playlists, setPlaylists] = useState([]);
+  const [searchTriggered, setSearchTriggered] = useState(false);
 
   useEffect(() => {
     let authParams = {
@@ -31,6 +32,11 @@ function App() {
   }, []);
 
   async function search() {
+    if (searchInput.trim() === "") {
+      setSearchTriggered(true);
+      return;
+    }
+
     try {
       let playlistParams = {
         method: "GET",
@@ -66,6 +72,7 @@ function App() {
           aria-label="Search Playlists based off your mood"
           onKeyDown={(event) => {
             if (event.key === "Enter") {
+              setSearchTriggered(true);
               search();
             }
           }}
@@ -81,11 +88,16 @@ function App() {
           }}
         />
 
-        <Button onClick={search}>Search</Button>
+        <Button onClick={() => {
+          setSearchTriggered(true);
+          search();
+        }}>Search</Button>
       </InputGroup>
 
       <div className="playlist-container" style={{ marginTop: "30px" }}>
-        {playlists.length === 0 ? (
+        {searchTriggered && searchInput.trim() === "" ? (
+          <p>Please enter a search term to find playlists!</p>
+        ) : searchTriggered && playlists.length === 0 ? (
           <p>No playlists found. Try another mood!</p>
         ) : (
           playlists.map((playlist) => (
